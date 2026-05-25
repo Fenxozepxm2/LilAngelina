@@ -1,0 +1,105 @@
+/* Общие стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Рекомендуется для точного контроля размеров блоков */
+}
+.container {
+  background-color: #0a0a0a;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.loading {
+  color: #fff;
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #8b0000;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  color: #6B182B;
+  font-size: 18px;
+}
+
+.icons {
+  display: flex;
+  gap: 15px;
+}
+
+.icon {
+  color: #6B182B;
+  cursor: pointer;
+}
+
+/* Featured grid (4 колонки) */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.poster-card {
+  border: 1px solid #6B182B;
+  height: 140px;
+  overflow: hidden;
+}
+
+.poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Заголовок assortment */
+.title {
+  color: #6B182B;
+  text-align: center;
+  margin: 120px 0px 40px 0px;
+  border-top: 1px solid #6B182B;
+  border-bottom: 1px solid #6B182B;
+  padding: 10px 0;
+  letter-spacing: 2px;
+  font-size: 48px;
+}
+
+/* Сетка товаров (3 колонки с рамками) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid #6B182B;
+}
+
+
+
+.image {
+  width: 100%;
+  height: 400px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.buy-btn {
+  background-color: #e21f30a2;
+  color: #fff;
+  border: none;
+  padding: 8px 134px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  margin-top: 15px;
+}
+
+.buy-btn:hover {
+  background-color: #ff0033;
+}

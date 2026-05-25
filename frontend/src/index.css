@@ -1,0 +1,209 @@
+
+
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #08060d;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #0a0a0a;
+    --border: #0a0a0a;
+    --code-bg: #08060d;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+
+
+
+/* Карточка в сетке */
+.card {
+  border-right: 1px solid #6B182B;
+  border-left: 1px solid #6B182B;
+  border-bottom: 1px solid #6B182B;
+  padding: 20px;
+  text-align: center;
+}
+
+
+/* Изображение занимает 75% карточки */
+.image {
+  width: 100%;
+  aspect-ratio: 1 / 1.2;  /* или 4 / 5, поэкспериментируй */
+  object-fit: cover;
+  display: block;
+}
+
+/* Блок с текстом — компактный */
+.card-info {
+  padding: 10px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;       /* текст в одну строку */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* если не влезает — многоточие */
+}
+
+.card-author {
+  font-size: 0.8rem;
+  color: #c44569;
+  margin: 0;
+}
+
+.card-details {
+  font-size: 0.7rem;
+  color: #666;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 6px 0 0;
+}
+
+.buy-btn {
+  background: var(--border);
+  color: white;
+  border: none;
+  padding: 8px 48px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  width: auto;
+  display: inline-block;
+  margin: 0 auto;
+  font-size: 0.9rem;
+}
+
+/* Контейнер верхней строки */
+.featured-grid .poster-card{
+  height: 600px !important;   /* временно с !important для проверки */
+  border: 2px solid #8b0000;      /* яркая рамка — сразу увидишь, работает ли */
+  border-radius: 16px;
+}
+
+/* Карточка внутри */
+.poster-card {
+  height: 200px;        /* Фиксированная высота, можно любую */
+  overflow: hidden;
+  border: 1px solid #8b0000;
+  border-radius: 8px;   /* скругление углов (опционально) */
+}
+
+/* Само изображение внутри карточки */
+.poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  
+    /* картинка заполнит карточку, обрезая лишнее */
+}
