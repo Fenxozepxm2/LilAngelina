@@ -1,33 +1,37 @@
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 from fastapi import FastAPI, HTTPException, APIRouter, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, HTTPBasic
+from domain.models import UserAuthSchema
 import httpx  
 from dependencies import get_session, get_db
 from data.services.profile_service import LilAngelinaService
 from sqlalchemy.orm import Session
-from domain.models import PlayerProfile, RatingHistory, GameJson, GamesRequestParams
+from main import settings
+import jwt
 
 
-profile_router = APIRouter()
+profile_router = APIRouter(tags=["profile"])
+
+oauth2_schema = OAuth2PasswordBearer(tokenUrl='/login')
 
 
-@profile_router.get("/posters")
-def get_posters(db: Session = Depends(get_db)):
-    service = LilAngelinaService(db)
-    posters = service.show_posters()
-    print(f"Количество постеров: {len(posters)}")
-    import os
-    print("Путь к БД:", os.path.abspath("lil_angelina.db"))
-    return posters
-
-
-
+def generate_jwt_token(data: dict) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"expire": expire})
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
 
 
+@profile_router.post("/auth/register")
+def register_user(user_data: UserAuthSchema):
 
+    hashed_password = pwd_context.hash(user_data.password)
+
+    
 
 
 
@@ -92,14 +96,3 @@ def get_posters(db: Session = Depends(get_db)):
 #             return game_list
 #     except httpx.HTTPStatusError as e:
 #         raise e
-
-
-
-
-
-
-
-
-# агрегированная статистика игрока
-#@profile_router.get("/profile/statz/{username}")
-#async def profile_statz(username: str):
