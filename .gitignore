@@ -1,0 +1,21 @@
+# Виртуальное окружение 
+venv/
+.venv/
+env/
+
+backend/.env
+backend/migrations
+*.db
+*.ini
+
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+
+.vscode/
+.idea/
+
+frontend/templates

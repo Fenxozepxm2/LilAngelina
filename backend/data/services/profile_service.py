@@ -4,7 +4,7 @@
 # обновить БД и вернуть фронту
 
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Depends
 from sqlalchemy.orm import Session
 import httpx
 from httpx import AsyncClient  
@@ -12,6 +12,9 @@ from data.repos.profile_repo import LilangelinaRepo
 from domain.models import PlayerStats, UserAuthSchema
 from domain.functions import calculate_stat_all_matches
 from passlib.context import CryptContext
+from api.routers.profile import oauth2_schema
+from main import settings
+import jwt
 
 
 
@@ -39,7 +42,7 @@ class LilAngelinaService():
         return self.lil_repo.get_poster(self.db, id)
     
     def register_user(self, user_data: UserAuthSchema):
-        if not self.lil_repo.check_user(user_data.username):
+        if not self.lil_repo.check_user_reg(user_data.username):
             hashed_password = pwd_context.hash(user_data.password)
             self.lil_repo.add_user(self.db, 
                                    username=user_data.username,
@@ -48,9 +51,22 @@ class LilAngelinaService():
                                    mail=user_data.mail
                                    )
         else:
-            return {
-                "400": "Already register"
-            }
+            raise HTTPException(status_code=400, detail="user already register")
+        
+    def get_current_user(self, token: str= Depends(oauth2_schema)):
+        credentials_exception = HTTPException(status_code=401, detail="Не удалось валидировать токен", headers={"WWW-Authenticate": "Bearer"})
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            username: str= payload.get("sub")
+            if not username:
+                raise credentials_exception
+        except jwt.PyJWTError:
+            raise credentials_exception
+        
+        user = self.lil_repo.find_user_by_username(self.db, username)
+        if not user:
+            raise credentials_exception
+        return user
 
 
 

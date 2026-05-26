@@ -29,8 +29,11 @@ class LilangelinaRepo():
         db.add(user)
         db.commit()
 
-    def check_user(self, db: Session, username):
-        return db.query(User).filter_by(username=username).first()
+    def check_user_reg(self, db: Session, username) -> bool:
+        return db.query(User).filter_by(username=username).first() is not None
 
-
-    
+    def find_user_by_username(self, db: Session, username):
+        try:
+            return db.query(User).filter_by(username=username).first()
+        except ValueError as e:
+            raise e
