@@ -47,8 +47,6 @@ def orders_page(db: Session, user: User = Depends(service.get_current_user)):
 
 @orders_page_router.post("/add_order")
 def add_order(db: Session, cart: dict, user: User = Depends(service.get_current_user)):
-    service.lil_repo.add_user_order(db, user,user.id, cart)
-    return {
-        
-    }
+    order = service.lil_repo.add_user_order(db, user,user.id, cart)
+    return order
 
