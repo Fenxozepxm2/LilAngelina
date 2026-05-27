@@ -2,15 +2,26 @@
 
 # <!-- проверить данные на устаревание  -->
 # обновить БД и вернуть фронту
+
+
+from fastapi import HTTPException, status, Depends
 from sqlalchemy.orm import Session
 import httpx
 from httpx import AsyncClient  
 from data.repos.profile_repo import LilangelinaRepo 
-from data.adapters.profile_adapter import LiChessAdapter
-from domain.models import PlayerStats
+from domain.models import PlayerStats, UserAuthSchema
 from domain.functions import calculate_stat_all_matches
+from passlib.context import CryptContext
+from api.routers.profile import oauth2_schema
+from main import settings
+import jwt
 
 
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(cin_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(cin_password, hashed_password)
 
 
 class LilAngelinaService():
@@ -20,6 +31,47 @@ class LilAngelinaService():
 
     def show_posters(self):
         return self.lil_repo.get_posters(self.db)
+    
+    def show_disks(self):
+        return self.lil_repo.get_disks(self.db)
+    
+    def show_disk(self, id):
+        return self.lil_repo.get_disk(self.db, id)
+
+    def show_poster(self, id):
+        return self.lil_repo.get_poster(self.db, id)
+    
+    def register_user(self, user_data: UserAuthSchema):
+        if not self.lil_repo.check_user_reg(user_data.username):
+            hashed_password = pwd_context.hash(user_data.password)
+            self.lil_repo.add_user(self.db, 
+                                   username=user_data.username,
+                                   hashed_password=hashed_password,
+                                   phone=user_data.phone,
+                                   mail=user_data.mail
+                                   )
+        else:
+            raise HTTPException(status_code=400, detail="user already register")
+        
+    def get_current_user(self, token: str= Depends(oauth2_schema)):
+        credentials_exception = HTTPException(status_code=401, detail="Не удалось валидировать токен", headers={"WWW-Authenticate": "Bearer"})
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            username: str= payload.get("sub")
+            if not username:
+                raise credentials_exception
+        except jwt.PyJWTError:
+            raise credentials_exception
+        
+        user = self.lil_repo.find_user_by_username(self.db, username)
+        if not user:
+            raise credentials_exception
+        return user
+
+
+
+
+
 
 # class LiChhessService():
 #     def __init__(self, db: Session, client: httpx.AsyncClient):
