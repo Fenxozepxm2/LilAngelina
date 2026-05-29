@@ -8,7 +8,7 @@ import httpx
 from dependencies import get_session, get_db
 from data.services.profile_service import LilAngelinaService
 from sqlalchemy.orm import Session
-from main import settings
+from config import settings
 from passlib.context import CryptContext
 import jwt
 
@@ -19,7 +19,7 @@ profile_router = APIRouter(tags=["profile"])
 oauth2_schema = OAuth2PasswordBearer(tokenUrl='/login')
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 def verify_password(cin_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(cin_password, hashed_password)
@@ -42,7 +42,7 @@ def generate_jwt_token(username) -> dict:
 @profile_router.post("/auth/register")
 def register_user_endp(user_data: UserAuthSchema, db: Session = Depends(get_db)):
     service = LilAngelinaService(db)
-    check_usr = service.lil_repo.check_user(db, user_data.username)
+    check_usr = service.lil_repo.check_user_reg(db, user_data.username)
     if not check_usr:
         service.register_user(user_data)
         return {

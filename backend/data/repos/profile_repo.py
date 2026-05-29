@@ -41,7 +41,7 @@ class LilangelinaRepo():
     def get_user_orders(self, db: Session, user_id: int) -> dict:
         return db.query(Order).options(selectinload(Order.items)).filter(Order.user_id == user_id).all()
     
-    def add_user_order(self, db: Session, user_data: dict, user_id: int, cart_items: dict) -> dict:
+    def add_user_order(self, db: Session, user_data: dict, user_id: int, cart_items: list) -> dict:
         # Создаём заказ
         order = Order(
             status="в обработке",
@@ -56,16 +56,9 @@ class LilangelinaRepo():
         db.flush()  # чтобы получить order.id
 
         total = 0
-        for item in cart_items:
-            order_item = OrderItem(
-                item_type=item["item_type"],
-                quantity=item["quantity"],
-                item_id=item["item_id"],
-                price=item["price"],
-                order_id=order.id
-            )
-            db.add(order_item)
-            total += item["price"] * item["quantity"]
+        
+        db.add(cart_items)
+        total += cart_items["price"] * cart_items["quantity"]
         
         order.amount = total + (order.commission or 0)  # комиссия по умолчанию 5
         db.commit()

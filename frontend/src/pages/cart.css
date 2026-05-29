@@ -1,0 +1,162 @@
+.cart {
+  padding: 40px;
+  color: white;
+  background: #050505;
+  min-height: 100vh;
+}
+
+.cart-title {
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* GRID */
+.cart-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+/* ITEMS */
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item {
+  display: flex;
+  gap: 20px;
+  background: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+}
+
+.cart-item:hover {
+  border-color: red;
+  transform: translateY(-3px);
+}
+
+.cart-item img {
+  width: 100px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.price {
+  color: #ff3c3c;
+  font-weight: bold;
+}
+
+/* CONTROLS */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.controls button {
+  background: black;
+  border: 1px solid red;
+  color: white;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.controls button:hover {
+  background: red;
+}
+
+/* REMOVE */
+.remove {
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  text-align: left;
+}
+
+.remove:hover {
+  text-decoration: underline;
+}
+
+/* SUMMARY */
+.cart-summary {
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+
+  background: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.cart-summary h3 {
+  margin-bottom: 15px;
+}
+
+.total {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* BUTTONS */
+.checkout {
+  width: 100%;
+  padding: 12px;
+  background: red;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.checkout:hover {
+  background: #ff2a2a;
+}
+
+.clear {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid red;
+  color: white;
+  cursor: pointer;
+}
+
+/* EMPTY */
+.cart-empty {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.cart-empty button {
+  padding: 10px 20px;
+  background: red;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
