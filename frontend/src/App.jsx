@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";   // ← добавить
+import axios from "axios";  
 import './App.css';
 import { useCart } from "./contexts/CartContext";
+import { Link, useNavigate } from 'react-router-dom';
+import Header from "./header";
+
 
 export default function App() {
   const [posters, setPosters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { addToCart, cartItems } = useCart();   // ← добавить cartItems
+  const { addToCart, cartItems } = useCart();   
 
   useEffect(() => {
     fetchPosters();
@@ -42,19 +44,15 @@ export default function App() {
   const allPosters = posters.slice(0);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+
+
+
+
+
+
   return (
     <div className="container">
-      {/* HEADER с ссылкой на корзину */}
-      <div className="header">
-        <span className="logo">f*ck style</span>
-        <div className="icons">
-          <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>
-            🛒 Корзина {cartCount > 0 && `(${cartCount})`}
-          </Link>
-          <span className="icon">⌂</span>
-          <span className="icon">★</span>
-        </div>
-      </div>
+      <Header cartCount={cartCount} />  
 
       <div className="featured-grid">
         {featuredPosters.map((item) => (

@@ -1,59 +1,110 @@
-/* Общие стили */
+/* RESET */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; /* Рекомендуется для точного контроля размеров блоков */
+  box-sizing: border-box;
 }
+
+/* BODY */
 .container {
-  background-color: #0a0a0a;
+  background: radial-gradient(circle at top, #0a0a0a, #050505);
   min-height: 100vh;
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 20px 40px;
+  font-family: 'Inter', sans-serif;
+  color: white;
 }
 
-.loading {
-  color: #fff;
-  text-align: center;
-  margin-top: 50px;
-}
-
-/* Header */
+/* HEADER */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #8b0000;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 0, 0, 0.2);
 }
 
 .logo {
-  color: #6B182B;
-  font-size: 18px;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #ff2a2a;
 }
 
-.icons {
+/* NAV */
+.nav {
   display: flex;
+  gap: 25px;
+}
+
+.nav a {
+  color: #aaa;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.nav a:hover {
+  color: white;
+}
+
+/* AUTH */
+.auth {
+  display: flex;
+  align-items: center;
   gap: 15px;
 }
 
-.icon {
-  color: #6B182B;
-  cursor: pointer;
+.auth-link {
+  color: #aaa;
+  text-decoration: none;
 }
 
-/* Featured grid (4 колонки) */
+.auth-btn {
+  background: red;
+  padding: 8px 14px;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.auth-btn:hover {
+  background: #ff2a2a;
+}
+
+.username {
+  color: #ff4d4d;
+}
+
+.logout {
+  background: transparent;
+  border: 1px solid red;
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout:hover {
+  background: red;
+}
+
+/* FEATURED */
 .featured-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin: 30px 0;
 }
 
 .poster-card {
   border: 1px solid #6B182B;
   height: 140px;
   overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.poster-card:hover {
+  transform: scale(1.03);
+  border-color: red;
 }
 
 .poster-image {
@@ -62,44 +113,183 @@
   object-fit: cover;
 }
 
-/* Заголовок assortment */
+/* TITLE */
 .title {
-  color: #6B182B;
   text-align: center;
-  margin: 120px 0px 40px 0px;
-  border-top: 1px solid #6B182B;
-  border-bottom: 1px solid #6B182B;
-  padding: 10px 0;
-  letter-spacing: 2px;
-  font-size: 48px;
+  margin: 80px 0 40px;
+  font-size: 42px;
+  letter-spacing: 4px;
+  color: #ff2a2a;
+  position: relative;
 }
 
-/* Сетка товаров (3 колонки с рамками) */
+.title::after {
+  content: "";
+  width: 100px;
+  height: 2px;
+  background: red;
+  display: block;
+  margin: 10px auto 0;
+}
+
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid #6B182B;
+  gap: 25px;
 }
 
+/* CARD */
+.card {
+  background: rgba(255, 0, 0, 0.03);
+  border: 1px solid rgba(255, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  transition: 0.3s;
+  backdrop-filter: blur(6px);
+}
 
+.card:hover {
+  transform: translateY(-5px);
+  border-color: red;
+}
 
+/* IMAGE */
 .image {
   width: 100%;
-  height: 400px;
+  height: 320px;
   object-fit: contain;
-  margin-bottom: 15px;
 }
 
+/* BUTTON */
 .buy-btn {
-  background-color: #e21f30a2;
-  color: #fff;
-  border: none;
-  padding: 8px 134px;
-  cursor: pointer;
-  letter-spacing: 2px;
+  width: 100%;
   margin-top: 15px;
+  padding: 12px;
+  background: red;
+  border: none;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .buy-btn:hover {
-  background-color: #ff0033;
+  background: #ff2a2a;
+  transform: scale(1.02);
+}
+
+/* LOADING */
+.loading {
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+
+
+
+
+/* AUTH PAGE */
+.auth-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #0a0a0a, #050505);
+}
+
+/* BOX */
+.auth-box {
+  width: 350px;
+  padding: 40px;
+  border-radius: 14px;
+  background: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.auth-box:hover {
+  border-color: red;
+  transform: translateY(-5px);
+}
+
+.auth-box h2 {
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+/* INPUT */
+.auth-box input {
+  padding: 12px;
+  background: black;
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  color: white;
+  outline: none;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.auth-box input:focus {
+  border-color: red;
+}
+
+/* BUTTON */
+.auth-box button {
+  margin-top: 10px;
+  padding: 12px;
+  background: red;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-box button:hover {
+  background: #ff2a2a;
+  transform: scale(1.03);
+}
+
+/* LINKS */
+.auth-box p {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.auth-box a {
+  color: #ff3c3c;
+  text-decoration: none;
+}
+
+.auth-box a:hover {
+  text-decoration: underline;
+}
+
+/* подправить */
+.auth-message {
+  padding: 5px;
+
 }
