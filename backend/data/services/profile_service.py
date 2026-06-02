@@ -13,6 +13,9 @@ from data.repos.profile_repo import LilangelinaRepo
 from domain.models import UserAuthSchema
 from domain.functions import calculate_stat_all_matches
 from passlib.context import CryptContext
+from data.models.models_db import Poster, Disko, User
+
+
 
 from config import settings
 import jwt
@@ -60,7 +63,38 @@ class LilAngelinaService():
             order = self.lil_repo.get_order_info(self.db, user_id, order_id)
             if not order:
                 raise HTTPException(status_code=404, detail="Заказ не найден")
+            
+            items_data = []
+            for item in order.items:
+                # Получаем картинку в зависимости от типа
+                if item.item_type == "poster":
+                    poster = self.db.query(Poster).filter(Poster.id == item.item_id).first()
+                    image_url = poster.poster_url if poster else ""
+                else:  # disk
+                    disk = self.db.query(Disko).filter(Disko.id == item.item_id).first()
+                    image_url = disk.album_cover_url if disk else ""
+                
+                items_data.append({
+                    "id": item.id,
+                    "item_type": item.item_type,
+                    "quantity": item.quantity,
+                    "item_id": item.item_id,
+                    "price": item.price,
+                    "image_url": image_url
+                })
+            
+
         except HTTPException as e:
             raise HTTPException(status_code=404, detail="Заказ не найден")
 
-        return order
+        return {
+                "id": order.id,
+                "commission": order.commission,
+                "amount": order.amount,
+                "status": order.status,
+                "first_name_usr": order.first_name_usr,
+                "last_name_usr": order.last_name_usr,
+                "surname": order.surname,
+                "adress": order.adress,
+                "items": items_data
+            }

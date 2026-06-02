@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
+import './OrderPage.css'
+
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -35,20 +37,44 @@ const MyOrders = () => {
   if (!orders.length) return <div>У вас пока нет заказов.</div>;
 
   return (
-    <div className="orders-list">
-      <h2>Мои заказы</h2>
-      {orders.map(order => (
-        <div key={order.id} className="order-card">
-          <Link to={`/orders/${order.id}`}>
-            <div>
-              <strong>Заказ №{order.id}</strong> — {order.status}
-            </div>
-            <div>Сумма: {order.amount} ₽</div>
-            <div>Дата: {order.created_at ? new Date(order.created_at).toLocaleDateString() : '—'}</div>
-          </Link>
-        </div>
-      ))}
-    </div>
+    <div className="orders-layout">
+
+  <div className="orders-list">
+    <h2>Мои заказы</h2>
+
+    {orders.map(order => (
+      <div key={order.id} className="order-card">
+        <Link to={`/orders/${order.id}`}>
+          
+          <div className="order-header">
+            <strong>Заказ №{order.id}</strong>
+            <span className="order-status">{order.status}</span>
+          </div>
+
+          <div>Сумма: {order.amount} ₽</div>
+
+          <div className="order-preview">
+            {order.items?.slice(0, 5).map(item => (
+              <img key={item.id} src={item.image_url} />
+            ))}
+          </div>
+
+        </Link>
+      </div>
+    ))}
+
+  </div>
+
+  {/* ПРАВАЯ КОЛОНКА */}
+  <div className="orders-sidebar">
+    <h3>Информация</h3>
+    <p>Здесь можно сделать:</p>
+    <p>— фильтр заказов</p>
+    <p>— статусы</p>
+    <p>— повтор заказа</p>
+  </div>
+
+</div>
   );
 };
 

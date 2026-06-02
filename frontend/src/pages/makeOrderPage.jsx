@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import api from '../api';
+import './makeOrderPage.css'
 
 const OrderPage = () => {
   const { cartItems, getTotal, clearCart } = useCart();
@@ -63,8 +64,14 @@ const OrderPage = () => {
 
   return (
     <div className="checkout-page">
-      <h2>Оформление заказа</h2>
-      <form onSubmit={handleSubmit} className="checkout-form">
+  <h2>Оформление заказа</h2>
+
+  <div className="checkout-layout">
+
+    {/* ЛЕВАЯ ЧАСТЬ — ФОРМА */}
+    <form onSubmit={handleSubmit} className="checkout-form">
+
+      <div className="form-grid">
         <input
           type="text"
           name="first_name"
@@ -73,6 +80,7 @@ const OrderPage = () => {
           onChange={handleChange}
           required
         />
+
         <input
           type="text"
           name="last_name"
@@ -81,6 +89,7 @@ const OrderPage = () => {
           onChange={handleChange}
           required
         />
+
         <input
           type="text"
           name="surname"
@@ -88,6 +97,7 @@ const OrderPage = () => {
           value={form.surname}
           onChange={handleChange}
         />
+
         <input
           type="text"
           name="adress"
@@ -96,21 +106,43 @@ const OrderPage = () => {
           onChange={handleChange}
           required
         />
-        <div className="order-summary">
-          <h3>Ваш заказ</h3>
-          {cartItems.map(item => (
-            <div key={item.id}>
-              {item.name} x{item.quantity} = {item.price * item.quantity} ₽
-            </div>
-          ))}
-          <strong>Итого: {getTotal()} ₽</strong>
+      </div>
+
+      <button type="submit" disabled={loading}>
+        {loading ? 'Оформляем...' : 'Подтвердить заказ'}
+      </button>
+
+      {error && <p className="error">{error}</p>}
+    </form>
+
+    {/* ПРАВАЯ ЧАСТЬ — ЗАКАЗ */}
+    <div className="order-summary">
+
+      <h3>Ваш заказ</h3>
+
+      {cartItems.map(item => (
+        <div className="order-item" key={item.id}>
+          <img src={item.image_url} alt={item.name} />
+
+          <div className="order-item-info">
+            <div>{item.name}</div>
+            <div>{item.quantity} x {item.price} ₽</div>
+          </div>
+
+          <div className="order-price">
+            {item.price * item.quantity} ₽
+          </div>
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Оформляем...' : 'Подтвердить заказ'}
-        </button>
-        {error && <p className="error">{error}</p>}
-      </form>
+      ))}
+
+      <div className="order-total">
+        Итого: {getTotal()} ₽
+      </div>
+
     </div>
+
+  </div>
+</div>
   );
 };
 
