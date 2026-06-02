@@ -52,7 +52,7 @@ const OrderPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       clearCart();                    // очищаем корзину
-      navigate('/orders');            // на страницу моих заказов
+      navigate('/myOrders');            // на страницу моих заказов
     } catch (err) {
       setError('Ошибка при оформлении заказа. Попробуйте позже.');
       console.error(err);

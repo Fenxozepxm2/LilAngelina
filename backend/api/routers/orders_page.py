@@ -14,10 +14,11 @@ from data.models.models_db import User
 import jwt
 from api.user import get_current_user
 from domain.models import OrderRequest, CartItemSchema
+from fastapi.encoders import jsonable_encoder
 
 
 
-orders_page_router = APIRouter(tags=['orders', 'client'])
+orders_page_router = APIRouter(tags=['orders'])
 
 
 @orders_page_router.get('/orders')
@@ -60,3 +61,10 @@ def add_order(order_req: OrderRequest, user: User = Depends(get_current_user),db
     order = service.lil_repo.add_user_order(db, user_data, user.id, cart_items)
     return order
 
+
+@orders_page_router.get("/order/{order_id}")
+def get_order_info(order_id, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    service = LilAngelinaService(db)
+    order = service.show_user_order_info(user.id, order_id)
+    return jsonable_encoder(order,exclude="commision")
+    

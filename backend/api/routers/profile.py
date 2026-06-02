@@ -9,6 +9,7 @@ from dependencies import get_session, get_db
 from data.services.profile_service import LilAngelinaService
 from sqlalchemy.orm import Session
 from config import settings
+from data.models.models_db import User
 from passlib.context import CryptContext
 import jwt
 
@@ -25,14 +26,14 @@ def verify_password(cin_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(cin_password, hashed_password)
 
 
-def generate_jwt_token(username) -> dict:
+def generate_jwt_token(username, user_id) -> dict:
     # Access Token на 15 минут
     access_expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    access_token = jwt.encode({"sub": username, "exp": access_expire}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    access_token = jwt.encode({"sub": username, "user_id": user_id, "exp": access_expire}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     
     # Refresh Token на 7 дней
     refresh_expire = datetime.now(timezone.utc) + timedelta(days=7)
-    refresh_token = jwt.encode({"sub": username, "exp": refresh_expire}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    refresh_token = jwt.encode({"sub": username, "user_id": user_id, "exp": refresh_expire}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     
     return {"access_token": access_token, "refresh_token": refresh_token}
 
@@ -60,7 +61,9 @@ def login_user(responce: Response, form_data: OAuth2PasswordRequestForm = Depend
     if not user or not pwd_context.verify(form_data.password, user.hashed_password):
         raise HTTPException(status_code=404, detail="пользователь не найден", headers={"WWW-Authenticate": "Bearer"})
 
-    access_token = generate_jwt_token(form_data.username)
+    user_id = user.id
+    access_token = generate_jwt_token(form_data.username, user_id)
+
 
     responce.set_cookie(
         key="refresh_token",
@@ -76,7 +79,8 @@ def login_user(responce: Response, form_data: OAuth2PasswordRequestForm = Depend
     return {
         "access_token": access_token["access_token"],
         "token_type": "Bearer",
-        "user_id": user.username
+        "user_name": user.username,
+        "user_id": user_id
     }
 
 @profile_router.post("/token/refresh")
@@ -87,10 +91,11 @@ def refresh_access_token(responce: Response, request: Request, db: Session = Dep
     try:
         payload = jwt.decode(refresh_token, settings.SECRET_KEY,algorithms=[settings.ALGORITHM])
         username: str= payload.get("sub")
+        user_id: int=payload.get("user_id")
     except jwt.PyJWKError:
         raise HTTPException(status_code=401, detail="refresh token истёк")
 
-    new_tokens = generate_jwt_token(username)
+    new_tokens = generate_jwt_token(username, user_id)
 
     responce.set_cookie(
         key="refresh_token",
@@ -104,5 +109,6 @@ def refresh_access_token(responce: Response, request: Request, db: Session = Dep
     return {
         "access_token": new_tokens["access_token"],
         "token_type": "Bearer",
-        "user_id": username
+        "user_name": username,
+        "user_id": user_id
     }

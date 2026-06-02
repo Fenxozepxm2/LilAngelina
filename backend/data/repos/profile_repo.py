@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 
+
 class LilangelinaRepo():
     def get_posters(self, db: Session):
         return db.query(Poster).all()
@@ -93,4 +94,7 @@ class LilangelinaRepo():
             ]
         }
         
-        
+
+
+    def get_order_info(self, db: Session, user_id, order_id):
+        return db.query(Order).options(selectinload(Order.items)).filter_by(user_id=user_id, id=order_id).first()

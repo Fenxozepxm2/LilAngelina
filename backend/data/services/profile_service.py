@@ -53,36 +53,14 @@ class LilAngelinaService():
                                    )
         else:
             raise HTTPException(status_code=400, detail="user already register")
-        
+    
 
+    def show_user_order_info(self, user_id, order_id):
+        try:
+            order = self.lil_repo.get_order_info(self.db, user_id, order_id)
+            if not order:
+                raise HTTPException(status_code=404, detail="Заказ не найден")
+        except HTTPException as e:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
 
-
-
-
-# class LiChhessService():
-#     def __init__(self, db: Session, client: httpx.AsyncClient):
-#         self.db = db
-#         self.client = client
-#         self.profile_repo = LiChessRepos()
-#         self.profile_adapter = LiChessAdapter(client)
-        
-        
-#     async def show_statz(self, username: str):
-#         # проверим есть ли такой пользователь в БД
-#         user = self.profile_repo.get_user_profile(self.db, username)
-#         # если нету создаём
-#         if not user:
-#             dataf_profile = await self.profile_adapter.fetch_profile(username)
-#             dataf_rating = await self.profile_adapter.fetch_rating_history(username)
-#             self.profile_repo.save_user_rofile(self.db, username,dataf_profile,dataf_rating)
-#             games_json = await self.profile_adapter.fetch_games_history(username, max=200)
-#             self.profile_repo.save_user_game(self.db, username, games_json)
-
-#         # получаем данные из БД
-#         profile_data_db = self.profile_repo.get_user_profile(self.db, username)
-#         games_data_db = self.profile_repo.get_user_games(self.db, username)
-
-#         # расчитываем статистику
-#         statz = await calculate_stat_all_matches(profile_data_db)
-
-#         return statz
+        return order
