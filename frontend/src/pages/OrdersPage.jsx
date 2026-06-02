@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
-import './OrderPage.css'
+import './orderPage.css'
 
 
 const MyOrders = () => {
@@ -36,46 +36,48 @@ const MyOrders = () => {
   if (error) return <div className="error">{error}</div>;
   if (!orders.length) return <div>У вас пока нет заказов.</div>;
 
-  return (
+    return (
+  <div className="container">   {/* ВОТ ЭТО КЛЮЧЕВОЕ */}
+    
     <div className="orders-layout">
 
-  <div className="orders-list">
-    <h2>Мои заказы</h2>
+      <div className="orders-list">
+        <h2>МОИ ЗАКАЗЫ</h2>
 
-    {orders.map(order => (
-      <div key={order.id} className="order-card">
-        <Link to={`/orders/${order.id}`}>
-          
-          <div className="order-header">
-            <strong>Заказ №{order.id}</strong>
-            <span className="order-status">{order.status}</span>
+        {orders.map(order => (
+          <div key={order.id} className="order-card">
+            <Link to={`/orders/${order.id}`}>
+
+              <div className="order-header">
+                <strong>Заказ №{order.id}</strong>
+                <span className="order-status">{order.status}</span>
+              </div>
+
+              <div>Сумма: {order.amount} ₽</div>
+
+              <div className="order-preview">
+                {order.items?.slice(0, 5).map(item => (
+                  <img key={item.id} src={item.image_url} alt="" />
+                ))}
+              </div>
+
+            </Link>
           </div>
+        ))}
 
-          <div>Сумма: {order.amount} ₽</div>
-
-          <div className="order-preview">
-            {order.items?.slice(0, 5).map(item => (
-              <img key={item.id} src={item.image_url} />
-            ))}
-          </div>
-
-        </Link>
       </div>
-    ))}
+
+      <div className="orders-sidebar">
+        <h3>Информация</h3>
+        <p>— фильтр заказов</p>
+        <p>— статусы</p>
+        <p>— повтор заказа</p>
+      </div>
+
+    </div>
 
   </div>
-
-  {/* ПРАВАЯ КОЛОНКА */}
-  <div className="orders-sidebar">
-    <h3>Информация</h3>
-    <p>Здесь можно сделать:</p>
-    <p>— фильтр заказов</p>
-    <p>— статусы</p>
-    <p>— повтор заказа</p>
-  </div>
-
-</div>
-  );
+);
 };
 
 export default MyOrders;

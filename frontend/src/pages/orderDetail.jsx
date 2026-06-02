@@ -26,34 +26,60 @@ const OrderDetails = () => {
   if (loading) return <div>Загрузка...</div>;
   if (!order) return <div>Заказ не найден</div>;
 
-  return (
-   <div className="order-details-layout">
+return (
+  <div className="container">
 
-  {/* ЛЕВО */}
-  <div className="order-items">
-    {order.items.map(item => (
-      <div className="order-item-row" key={item.id}>
-        <img src={item.image_url} />
+    <div className="order-details-layout">
 
-        <div>
-          <div>{item.quantity} x {item.price} ₽</div>
+      {/* ЛЕВАЯ ЧАСТЬ */}
+      <div className="order-items">
+        <h2>СОСТАВ ЗАКАЗА</h2>
+
+        {order.items.map(item => (
+          <div className="order-item-row" key={item.id}>
+            <img src={item.image_url} alt="" />
+
+            <div className="item-info">
+              <div className="item-price">
+                {item.quantity} × {item.price} ₽
+              </div>
+            </div>
+
+            <div className="item-total">
+              {item.price * item.quantity} ₽
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ПРАВАЯ ЧАСТЬ */}
+      <div className="order-info">
+        <h2>Заказ №{order.id}</h2>
+
+        <div className="info-block">
+          <span>Статус</span>
+          <p className="status">{order.status}</p>
         </div>
 
-        <div>{item.price * item.quantity} ₽</div>
+        <div className="info-block">
+          <span>Сумма</span>
+          <p>{order.amount} ₽</p>
+        </div>
+
+        <div className="info-block">
+          <span>Адрес</span>
+          <p>{order.adress}</p>
+        </div>
+
+        <Link to="/myOrders" className="back-btn">
+          ← Назад к заказам
+        </Link>
       </div>
-    ))}
-  </div>
 
-  {/* ПРАВО */}
-  <div className="order-info">
-    <h2>Заказ №{order.id}</h2>
-    <p>{order.status}</p>
-    <p>{order.amount} ₽</p>
-    <p>{order.adress}</p>
-  </div>
+    </div>
 
-</div>
-  );
+  </div>
+);
 };
 
 export default OrderDetails;
