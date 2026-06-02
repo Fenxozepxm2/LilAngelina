@@ -17,7 +17,7 @@ from passlib.context import CryptContext
 from config import settings
 import jwt
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl='/login')
+oauth2_schema = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 

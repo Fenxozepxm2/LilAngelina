@@ -2,19 +2,21 @@ import React from 'react';
 import { useCart } from '../contexts/CartContext'; 
 import { useNavigate } from 'react-router-dom';
 import './cart.css'
+import Header from '../header';
+
 
 const Cart = () => {
     const { cartItems, removeFromCart, updateQuantity, getTotal, clearCart } = useCart();
     const navigate = useNavigate();
 
-    if (cartItems.length === 0){
-        return (
-          <div className="cart-empty">
-            <h2>Корзина пуста</h2>
-            <button onClick={() => navigate('/')}>На главную</button>
-          </div>
-        );
-    };
+    // if (cartItems.length === 0){
+    //     return (
+    //       <div className="cart-empty">
+    //         <h2>Корзина пуста</h2>
+    //         <button onClick={() => navigate('/')}>На главную</button>
+    //       </div>
+    //     );
+    // };
 
     const handleCheckout = () => {
         const token = localStorage.getItem('access_token');
@@ -28,6 +30,8 @@ const Cart = () => {
 
     return (
     <div className="cart">
+      <Header/> 
+
       <h2 className="cart-title">Корзина</h2>
 
       <div className="cart-grid">

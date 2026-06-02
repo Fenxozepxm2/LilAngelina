@@ -45,7 +45,7 @@ class OrderRequest(BaseModel):
     first_name: str
     last_name: str
     surname: Optional[str] = None
-    address: str
+    adress: str
     items: List[CartItemSchema]
 
 

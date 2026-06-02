@@ -18,7 +18,7 @@ const Header = ({ cartCount }) => {
       <nav className="nav">
         <Link to="/">Главная</Link>
         <Link to="/cart">
-          🛒 {cartCount > 0 && `(${cartCount})`}
+          Корзина {cartCount > 0 && `(${cartCount})`}
         </Link>
       </nav>
 

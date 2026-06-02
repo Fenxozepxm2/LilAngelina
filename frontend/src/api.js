@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '',   // твой прокси на бэкенд (порт 8000)
+  baseURL: '',   // прокси на бэкенд (порт 8000)
   withCredentials: true,   // чтобы браузер отправлял httpOnly cookie с refresh_token
 });
 

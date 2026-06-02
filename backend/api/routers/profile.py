@@ -16,7 +16,7 @@ import jwt
 
 profile_router = APIRouter(tags=["profile"])
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl='/login')
+oauth2_schema = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")

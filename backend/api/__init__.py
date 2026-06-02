@@ -8,4 +8,4 @@ main_router = APIRouter()
 
 main_router.include_router(profile_router)
 main_router.include_router(main_page_router, prefix="/api")
-main_router.include_router(orders_page_router)
+main_router.include_router(orders_page_router, prefix="/api")

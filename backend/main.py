@@ -4,7 +4,7 @@ import httpx
 import uvicorn
 from api import main_router 
 from contextlib import asynccontextmanager
-
+from fastapi.openapi.utils import get_openapi
 
 
 from data.models.models_db import Base
@@ -39,6 +39,31 @@ app.add_middleware(
 )
 
 
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Lil Angelina API",
+        version="1.0.0",
+        routes=app.routes,
+    )
+    # Принудительно устанавливаем схему безопасности
+    openapi_schema["components"]["securitySchemes"] = {
+        "OAuth2PasswordBearer": {
+            "type": "oauth2",
+            "flows": {
+                "password": {
+                    "tokenUrl": "/auth/login",
+                    "scopes": {}
+                }
+            }
+        }
+    }
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 
 

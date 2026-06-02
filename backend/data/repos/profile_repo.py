@@ -57,10 +57,18 @@ class LilangelinaRepo():
 
         total = 0
         
-        db.add(cart_items)
-        total += cart_items["price"] * cart_items["quantity"]
+        for item in cart_items:
+            order_item = OrderItem(
+                order_id=order.id,
+                item_type=item["item_type"],
+                item_id=item["item_id"],
+                quantity=item["quantity"],
+                price=item["price"]
+            )
+            db.add(order_item)
+            total += item["price"] * item["quantity"]
         
-        order.amount = total + (order.commission or 0)  # комиссия по умолчанию 5
+        order.amount = total + (total * (order.commission / 100))  # комиссия по умолчанию 5
         db.commit()
         db.refresh(order)  # подгружаем связанные items (если связь настроена на lazy='select')
 
