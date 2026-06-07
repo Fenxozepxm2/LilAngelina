@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 
+
 class LilangelinaRepo():
     def get_posters(self, db: Session):
         return db.query(Poster).all()
@@ -41,7 +42,7 @@ class LilangelinaRepo():
     def get_user_orders(self, db: Session, user_id: int) -> dict:
         return db.query(Order).options(selectinload(Order.items)).filter(Order.user_id == user_id).all()
     
-    def add_user_order(self, db: Session, user_data: dict, user_id: int, cart_items: dict) -> dict:
+    def add_user_order(self, db: Session, user_data: dict, user_id: int, cart_items: list) -> dict:
         # Создаём заказ
         order = Order(
             status="в обработке",
@@ -56,18 +57,19 @@ class LilangelinaRepo():
         db.flush()  # чтобы получить order.id
 
         total = 0
+        
         for item in cart_items:
             order_item = OrderItem(
+                order_id=order.id,
                 item_type=item["item_type"],
-                quantity=item["quantity"],
                 item_id=item["item_id"],
-                price=item["price"],
-                order_id=order.id
+                quantity=item["quantity"],
+                price=item["price"]
             )
             db.add(order_item)
             total += item["price"] * item["quantity"]
         
-        order.amount = total + (order.commission or 0)  # комиссия по умолчанию 5
+        order.amount = total + (total * (order.commission / 100))  # комиссия по умолчанию 5
         db.commit()
         db.refresh(order)  # подгружаем связанные items (если связь настроена на lazy='select')
 
@@ -92,4 +94,7 @@ class LilangelinaRepo():
             ]
         }
         
-        
+
+
+    def get_order_info(self, db: Session, user_id, order_id):
+        return db.query(Order).options(selectinload(Order.items)).filter_by(user_id=user_id, id=order_id).first()

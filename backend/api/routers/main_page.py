@@ -6,7 +6,7 @@ import httpx
 from dependencies import get_session, get_db
 from data.services.profile_service import LilAngelinaService
 from sqlalchemy.orm import Session
-from domain.models import PlayerProfile, RatingHistory, GameJson, GamesRequestParams
+
 
 
 

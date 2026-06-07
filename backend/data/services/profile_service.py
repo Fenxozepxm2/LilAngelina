@@ -5,20 +5,24 @@
 
 
 from fastapi import HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 import httpx
 from httpx import AsyncClient  
 from data.repos.profile_repo import LilangelinaRepo 
-from domain.models import PlayerStats, UserAuthSchema
+from domain.models import UserAuthSchema
 from domain.functions import calculate_stat_all_matches
 from passlib.context import CryptContext
-from api.routers.profile import oauth2_schema
-from main import settings
+from data.models.models_db import Poster, Disko, User
+
+
+
+from config import settings
 import jwt
 
+oauth2_schema = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 def verify_password(cin_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(cin_password, hashed_password)
@@ -42,7 +46,7 @@ class LilAngelinaService():
         return self.lil_repo.get_poster(self.db, id)
     
     def register_user(self, user_data: UserAuthSchema):
-        if not self.lil_repo.check_user_reg(user_data.username):
+        if not self.lil_repo.check_user_reg(self.db, user_data.username):
             hashed_password = pwd_context.hash(user_data.password)
             self.lil_repo.add_user(self.db, 
                                    username=user_data.username,
@@ -52,51 +56,45 @@ class LilAngelinaService():
                                    )
         else:
             raise HTTPException(status_code=400, detail="user already register")
-        
-    def get_current_user(self, token: str= Depends(oauth2_schema)):
-        credentials_exception = HTTPException(status_code=401, detail="Не удалось валидировать токен", headers={"WWW-Authenticate": "Bearer"})
+    
+
+    def show_user_order_info(self, user_id, order_id):
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-            username: str= payload.get("sub")
-            if not username:
-                raise credentials_exception
-        except jwt.PyJWTError:
-            raise credentials_exception
-        
-        user = self.lil_repo.find_user_by_username(self.db, username)
-        if not user:
-            raise credentials_exception
-        return user
+            order = self.lil_repo.get_order_info(self.db, user_id, order_id)
+            if not order:
+                raise HTTPException(status_code=404, detail="Заказ не найден")
+            
+            items_data = []
+            for item in order.items:
+                # Получаем картинку в зависимости от типа
+                if item.item_type == "poster":
+                    poster = self.db.query(Poster).filter(Poster.id == item.item_id).first()
+                    image_url = poster.poster_url if poster else ""
+                else:  # disk
+                    disk = self.db.query(Disko).filter(Disko.id == item.item_id).first()
+                    image_url = disk.album_cover_url if disk else ""
+                
+                items_data.append({
+                    "id": item.id,
+                    "item_type": item.item_type,
+                    "quantity": item.quantity,
+                    "item_id": item.item_id,
+                    "price": item.price,
+                    "image_url": image_url
+                })
+            
 
+        except HTTPException as e:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
 
-
-
-
-
-# class LiChhessService():
-#     def __init__(self, db: Session, client: httpx.AsyncClient):
-#         self.db = db
-#         self.client = client
-#         self.profile_repo = LiChessRepos()
-#         self.profile_adapter = LiChessAdapter(client)
-        
-        
-#     async def show_statz(self, username: str):
-#         # проверим есть ли такой пользователь в БД
-#         user = self.profile_repo.get_user_profile(self.db, username)
-#         # если нету создаём
-#         if not user:
-#             dataf_profile = await self.profile_adapter.fetch_profile(username)
-#             dataf_rating = await self.profile_adapter.fetch_rating_history(username)
-#             self.profile_repo.save_user_rofile(self.db, username,dataf_profile,dataf_rating)
-#             games_json = await self.profile_adapter.fetch_games_history(username, max=200)
-#             self.profile_repo.save_user_game(self.db, username, games_json)
-
-#         # получаем данные из БД
-#         profile_data_db = self.profile_repo.get_user_profile(self.db, username)
-#         games_data_db = self.profile_repo.get_user_games(self.db, username)
-
-#         # расчитываем статистику
-#         statz = await calculate_stat_all_matches(profile_data_db)
-
-#         return statz
+        return {
+                "id": order.id,
+                "commission": order.commission,
+                "amount": order.amount,
+                "status": order.status,
+                "first_name_usr": order.first_name_usr,
+                "last_name_usr": order.last_name_usr,
+                "surname": order.surname,
+                "adress": order.adress,
+                "items": items_data
+            }

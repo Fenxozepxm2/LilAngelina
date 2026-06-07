@@ -4,22 +4,14 @@ import httpx
 import uvicorn
 from api import main_router 
 from contextlib import asynccontextmanager
+from fastapi.openapi.utils import get_openapi
 
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from data.models.models_db import Base
 from data.models.database import engine
 
 
-class Set_Settings(BaseSettings):
-    SECRET_KEY: str
-    ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    model_config =  SettingsConfigDict(env_file=".env")
-
-
-settings = Set_Settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -47,6 +39,31 @@ app.add_middleware(
 )
 
 
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Lil Angelina API",
+        version="1.0.0",
+        routes=app.routes,
+    )
+    # Принудительно устанавливаем схему безопасности
+    openapi_schema["components"]["securitySchemes"] = {
+        "OAuth2PasswordBearer": {
+            "type": "oauth2",
+            "flows": {
+                "password": {
+                    "tokenUrl": "/auth/login",
+                    "scopes": {}
+                }
+            }
+        }
+    }
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 
 
