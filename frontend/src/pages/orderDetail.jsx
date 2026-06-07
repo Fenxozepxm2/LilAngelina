@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api';
 import './orderDetail.css'
+import Header from '../header';
 
 
 const OrderDetails = () => {
@@ -28,7 +29,7 @@ const OrderDetails = () => {
 
 return (
   <div className="container">
-
+    <Header/> 
     <div className="order-details-layout">
 
       {/* ЛЕВАЯ ЧАСТЬ */}

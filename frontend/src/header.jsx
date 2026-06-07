@@ -1,7 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useCart } from "./contexts/CartContext";
+import "./Header.css";
 
-const Header = ({ cartCount }) => {
+const Header = () => {   // ← убираем cartCount из пропсов
   const navigate = useNavigate();
+  const location = useLocation();
+  const { cartItems } = useCart();   // ← получаем корзину
+
   const isLoggedIn = !!localStorage.getItem('access_token');
   const username = localStorage.getItem('username');
 
@@ -11,18 +17,43 @@ const Header = ({ cartCount }) => {
     navigate('/login');
   };
 
-  return (
-    <header className="header">
-      <div className="logo">f*ck style</div>
+  // считаем общее количество товаров
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 20);
+  };
 
-      <nav className="nav">
-        <Link to="/">Главная</Link>
-        <Link to="/cart">
-          Корзина {cartCount > 0 && `(${cartCount})`}
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+  const isActive = (path) => location.pathname === path;
+
+  return (
+    <header className={`header-modern ${scrolled ? "scrolled" : ""}`}>
+      <div className="logo">
+        f*ck style<span className="logo-accent">✦</span>
+      </div>
+
+      <nav className="nav-modern">
+        <Link to="/" className={isActive("/") ? "active" : ""}>
+          Главная
+        </Link>
+
+        <Link to="/cart" className={isActive("/cart") ? "active" : ""}>
+          Корзина
+          {cartCount > 0 && (
+            <span className="cart-badge">{cartCount}</span>
+          )}
+        </Link>
+
+        <Link to="/myOrders" className={isActive("/myOrders") ? "active" : ""}>
+          Заказы
         </Link>
       </nav>
 
-      <div className="auth">
+      <div className="header-right">
         {!isLoggedIn ? (
           <>
             <Link to="/login" className="auth-link">Войти</Link>
@@ -31,9 +62,7 @@ const Header = ({ cartCount }) => {
         ) : (
           <>
             <span className="username">{username}</span>
-            <button onClick={handleLogout} className="logout">
-              Выйти
-            </button>
+            <button onClick={handleLogout} className="logout">Выйти</button>
           </>
         )}
       </div>

@@ -5,13 +5,17 @@ import './index.css'
 import App from './App.jsx'
 import Root from './Root'  
 import { CartProvider } from './contexts/CartContext.jsx'
+import { ToastProvider } from './contexts/ToastContext.jsx'
+import "./toast.css"
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <CartProvider>
-      <BrowserRouter>
-        <Root />
-      </BrowserRouter>
-    </CartProvider>
-  </StrictMode>
+  <ToastProvider>
+    <StrictMode>
+      <CartProvider>
+        <BrowserRouter>
+          <Root />
+        </BrowserRouter>
+      </CartProvider>
+    </StrictMode>
+  </ToastProvider>
 )

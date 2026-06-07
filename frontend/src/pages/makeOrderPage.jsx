@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import api from '../api';
 import './makeOrderPage.css'
+import Header from '../header';
 
 const OrderPage = () => {
   const { cartItems, getTotal, clearCart } = useCart();
@@ -64,6 +65,7 @@ const OrderPage = () => {
 
   return (
     <div className="checkout-page">
+      <Header/> 
   <h2>Оформление заказа</h2>
 
   <div className="checkout-layout">

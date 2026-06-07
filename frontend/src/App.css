@@ -74,18 +74,7 @@
   color: #ff4d4d;
 }
 
-.logout {
-  background: transparent;
-  border: 1px solid red;
-  color: white;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
 
-.logout:hover {
-  background: red;
-}
 
 /* FEATURED */
 .featured-grid {

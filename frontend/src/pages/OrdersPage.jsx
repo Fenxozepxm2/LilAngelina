@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import './orderPage.css'
+import Header from '../header';
 
 
 const MyOrders = () => {
@@ -38,30 +39,45 @@ const MyOrders = () => {
 
     return (
   <div className="container">   {/* ВОТ ЭТО КЛЮЧЕВОЕ */}
-    
+    <Header/> 
     <div className="orders-layout">
 
       <div className="orders-list">
         <h2>МОИ ЗАКАЗЫ</h2>
 
         {orders.map(order => (
-          <div key={order.id} className="order-card">
-            <Link to={`/orders/${order.id}`}>
+          <div className="order-card" key={order.id}>
+            
+           
+            <div 
+              className="order-bg"
+              style={{ backgroundImage: `url(${order.items[0]?.image_url})` }}
+            />
 
-              <div className="order-header">
-                <strong>Заказ №{order.id}</strong>
-                <span className="order-status">{order.status}</span>
+            <div className="order-inner">
+              
+              {/* ЛЕВО — ГЛАВНЫЙ ПОСТЕР */}
+              <div className="order-poster">
+                <img src={order.items[0]?.image_url} alt="" />
               </div>
 
-              <div>Сумма: {order.amount} ₽</div>
+              {/* ПРАВО — ИНФА */}
+              <div className="order-info">
+                <h3>Заказ №{order.id}</h3>
 
-              <div className="order-preview">
-                {order.items?.slice(0, 5).map(item => (
-                  <img key={item.id} src={item.image_url} alt="" />
-                ))}
+                <span className="status">{order.status}</span>
+
+                <p className="amount">Сумма: {order.amount} ₽</p>
+
+                <div className="items-preview">
+                  {order.items.slice(1, 4).map(item => (
+                    <img key={item.id} src={item.image_url} />
+                  ))}
+                </div>
+
               </div>
 
-            </Link>
+            </div>
           </div>
         ))}
 

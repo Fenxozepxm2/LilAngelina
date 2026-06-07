@@ -4,6 +4,7 @@ import './App.css';
 import { useCart } from "./contexts/CartContext";
 import { Link, useNavigate } from 'react-router-dom';
 import Header from "./header";
+import { useToast } from "./contexts/ToastContext";
 
 
 export default function App() {
@@ -20,13 +21,18 @@ export default function App() {
       const res = await axios.get("/api/posters");
       setPosters(res.data);
     } catch (err) {
-      console.error(err);
+      addToast("Ошибка загрузки постеров", "error")
     } finally {
       setLoading(false);
     }
+
+    
   };
 
   if (loading) return <div className="loading">Loading...</div>;
+
+  const { addToast } = useToast();
+
 
   const handleAddPosterToCart = (poster) => {
     addToCart({
@@ -37,15 +43,15 @@ export default function App() {
       price: poster.price,
       image_url: poster.poster_url,
     });
-    alert(`Постер "${poster.name}" добавлен в корзину`);
+    addToast(`"${poster.name}" добавлен в корзину`, "success");
   };
 
   const featuredPosters = posters.slice(0, 4);
   const allPosters = posters.slice(0);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-
-
+  
+  
 
 
 
@@ -76,4 +82,6 @@ export default function App() {
       </div>
     </div>
   );
+
 }
+
