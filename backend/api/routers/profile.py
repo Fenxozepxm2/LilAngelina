@@ -5,7 +5,9 @@ from fastapi import FastAPI, HTTPException, APIRouter, Depends, Response, Reques
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, HTTPBasic
 from domain.models import UserAuthSchema
 import httpx  
+from domain.models import UserContacts
 from dependencies import get_session, get_db
+from api.user import get_current_user
 from data.services.profile_service import LilAngelinaService
 from sqlalchemy.orm import Session
 from config import settings
@@ -111,4 +113,39 @@ def refresh_access_token(responce: Response, request: Request, db: Session = Dep
         "token_type": "Bearer",
         "user_name": username,
         "user_id": user_id
+    }
+
+
+
+
+
+@profile_router.get("/profile/me")
+def get_profile_info(user: User = Depends(get_current_user) ):
+        return {
+        "id": user.id,
+        "username": user.username,
+        "phone": user.phone,
+        "mail": user.mail,
+        "adres": user.adres,
+    }
+
+
+@profile_router.put("/profile/me")
+def update_profile_info(data: UserContacts, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    if data.mail is not None:
+        user.mail = data.mail
+    if data.adres is not None:
+        user.adres = data.adres
+    if data.phone is not None:
+        user.phone = data.phone
+
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "id": user.id,
+        "username": user.username,
+        "phone": user.phone,
+        "mail": user.mail,
+        "adres": user.adres,
     }

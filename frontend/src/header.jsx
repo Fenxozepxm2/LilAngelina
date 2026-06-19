@@ -61,7 +61,9 @@ const Header = () => {   // ← убираем cartCount из пропсов
           </>
         ) : (
           <>
-            <span className="username">{username}</span>
+            <Link to="/me" className="username">
+              {username}
+            </Link>
             <button onClick={handleLogout} className="logout">Выйти</button>
           </>
         )}

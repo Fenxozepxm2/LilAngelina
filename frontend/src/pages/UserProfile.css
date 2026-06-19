@@ -1,0 +1,90 @@
+.profile-page {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.profile-card {
+  width: 500px;
+  padding: 25px;
+
+  border-radius: 16px;
+
+  background: linear-gradient(145deg, #0a0a0a, #140000);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  color: white;
+}
+
+/* header */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+/* кнопки */
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  font-size: 13px;
+}
+
+.edit-btn {
+  background: rgba(255,0,0,0.2);
+  color: white;
+}
+
+.save-btn {
+  background: #ff2a2a;
+  color: white;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* поля */
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field label {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.field span {
+  font-size: 15px;
+}
+
+.field input {
+  padding: 10px;
+  border-radius: 8px;
+
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+}

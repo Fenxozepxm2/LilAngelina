@@ -48,7 +48,7 @@ def custom_openapi():
         version="1.0.0",
         routes=app.routes,
     )
-    # Принудительно устанавливаем схему безопасности
+    
     openapi_schema["components"]["securitySchemes"] = {
         "OAuth2PasswordBearer": {
             "type": "oauth2",

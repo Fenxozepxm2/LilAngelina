@@ -6,6 +6,7 @@ import Register from './pages/register';
 import OrderPage from './pages/makeOrderPage';
 import MyOrders from './pages/OrdersPage';
 import OrderDetails from './pages/orderDetail';
+import UserProfile from './pages/UserProfile';
 
 export default function Root() {
   return (
@@ -17,6 +18,8 @@ export default function Root() {
       <Route path="/order" element={<OrderPage />} />
       <Route path="/myOrders" element={<MyOrders />} />
       <Route path="/orders/:id" element={<OrderDetails />} />
+      <Route path="/me" element={<UserProfile />} />
+      
     </Routes>
   );
 }

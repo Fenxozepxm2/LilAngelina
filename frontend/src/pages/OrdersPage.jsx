@@ -38,7 +38,7 @@ const MyOrders = () => {
   if (!orders.length) return <div>У вас пока нет заказов.</div>;
 
     return (
-  <div className="container">   {/* ВОТ ЭТО КЛЮЧЕВОЕ */}
+  <div className="container">   
     <Header/> 
     <div className="orders-layout">
 
@@ -46,40 +46,35 @@ const MyOrders = () => {
         <h2>МОИ ЗАКАЗЫ</h2>
 
         {orders.map(order => (
-          <div className="order-card" key={order.id}>
-            
-           
-            <div 
-              className="order-bg"
-              style={{ backgroundImage: `url(${order.items[0]?.image_url})` }}
-            />
-
-            <div className="order-inner">
-              
-              {/* ЛЕВО — ГЛАВНЫЙ ПОСТЕР */}
-              <div className="order-poster">
-                <img src={order.items[0]?.image_url} alt="" />
-              </div>
-
-              {/* ПРАВО — ИНФА */}
-              <div className="order-info">
-                <h3>Заказ №{order.id}</h3>
-
-                <span className="status">{order.status}</span>
-
-                <p className="amount">Сумма: {order.amount} ₽</p>
-
-                <div className="items-preview">
-                  {order.items.slice(1, 4).map(item => (
-                    <img key={item.id} src={item.image_url} />
-                  ))}
-                </div>
-
-              </div>
-
-            </div>
+  <Link
+    to={`/orders/${order.id}`}
+    key={order.id}
+    className="order-card-link"   // можно добавить свой класс для стилей
+    style={{ textDecoration: 'none', color: 'inherit' }}
+  >
+    <div className="order-card">
+      <div
+        className="order-bg"
+        style={{ backgroundImage: `url(${order.items[0]?.image_url})` }}
+      />
+      <div className="order-inner">
+        <div className="order-poster">
+          <img src={order.items[0]?.image_url} alt="" />
+        </div>
+        <div className="order-info">
+          <h3>Заказ №{order.id}</h3>
+          <span className="status">{order.status}</span>
+          <p className="amount">Сумма: {order.amount} ₽</p>
+          <div className="items-preview">
+            {order.items.slice(1, 4).map(item => (
+              <img key={item.id} src={item.image_url} />
+            ))}
           </div>
-        ))}
+        </div>
+      </div>
+    </div>
+  </Link>
+))}
 
       </div>
 

@@ -11,6 +11,9 @@ class LilangelinaRepo():
     def get_posters(self, db: Session):
         return db.query(Poster).all()
 
+
+    
+
     def get_disks(self, db: Session):
         return db.query(Disko).all()
 
