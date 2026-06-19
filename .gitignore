@@ -4,7 +4,6 @@ venv/
 env/
 
 backend/.env
-backend/migrations
 *.db
 *.ini
 
@@ -19,3 +18,25 @@ backend/migrations
 .idea/
 
 frontend/templates
+
+
+
+
+
+# Сборка и дистрибутивы
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Логи
+*.log
+
+# Отчёты о покрытии
+.coverage
+htmlcov/
+.tox/
+
+# Файлы окружения (если есть ещё)
+.env
+*.env
