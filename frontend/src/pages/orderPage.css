@@ -1,0 +1,111 @@
+.order-card {
+  position: relative;
+  height: 200px;
+
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+
+h2{
+  margin-bottom: 30px;
+}
+
+
+/* 🔥 фон */
+.order-bg {
+  position: absolute;
+  inset: 0;
+
+  background-size: cover;
+  background-position: center;
+
+  filter: blur(10px) brightness(0.25);
+  transform: scale(1.2);
+}
+
+/* затемнение */
+.order-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0,0,0,0.6);
+}
+
+/* контент */
+.order-inner {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 25px;
+
+  padding: 20px;
+}
+
+/* 🔥 ГЛАВНЫЙ ПОСТЕР */
+.order-poster img {
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+
+  transition: transform 0.3s;
+}
+
+.order-poster img:hover {
+  transform: scale(1.05);
+}
+
+/* ПРАВО */
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  color: white;
+}
+
+/* статус */
+.status {
+  display: inline-block;
+  width: fit-content;
+
+  padding: 5px 12px;
+  border-radius: 20px;
+
+  background: rgba(255, 0, 0, 0.2);
+  font-size: 12px;
+}
+
+/* сумма */
+.amount {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* маленькие постеры */
+.items-preview {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.items-preview img {
+  width: 40px;
+  height: 55px;
+  object-fit: cover;
+
+  border-radius: 6px;
+  opacity: 0.8;
+}

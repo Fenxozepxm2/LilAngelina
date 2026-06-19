@@ -36,6 +36,9 @@ class Poster(Base):
     poster_url: Mapped[str] = mapped_column()
 
 
+
+
+
 class Disko(Base):
     __tablename__="disks"
 

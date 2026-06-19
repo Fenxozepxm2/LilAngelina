@@ -1,0 +1,133 @@
+.header-modern {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px 25px;
+  margin-bottom: 25px;
+
+  border-radius: 12px;
+
+  background: linear-gradient(90deg, #3a0d0d, #7a1c1c, #3a0d0d);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+
+  backdrop-filter: blur(8px);
+}
+
+.header-modern.scrolled {
+  box-shadow: 0 5px 20px rgba(255, 0, 0, 0.2);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+/* ЛОГО */
+.logo {
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #ff4d4d;
+}
+
+.logo-accent {
+  color: white;
+}
+
+/* НАВИГАЦИЯ */
+.nav-modern {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-modern a {
+  position: relative;
+  color: #ccc;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+/* hover underline */
+.nav-modern a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: red;
+  transition: 0.3s;
+}
+
+.nav-modern a:hover {
+  color: white;
+}
+
+.nav-modern a:hover::after {
+  width: 100%;
+}
+
+/* ACTIVE */
+.nav-modern a.active {
+  color: white;
+}
+
+.nav-modern a.active::after {
+  width: 100%;
+}
+
+/* БЕЙДЖ КОРЗИНЫ */
+.cart-badge {
+  margin-left: 6px;
+  background: red;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/* ПРАВАЯ ЧАСТЬ */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* AUTH */
+.auth-link {
+  color: #aaa;
+  text-decoration: none;
+}
+
+.auth-btn {
+  background: red;
+  padding: 8px 14px;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.auth-btn:hover {
+  background: #ff2a2a;
+}
+
+/* USER */
+.username {
+  color: #ff4d4d;
+}
+
+/* LOGOUT */
+.logout {
+  background: transparent;
+  border: 1px solid red;
+  border-radius: 5px;
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout:hover {
+  background: red;
+}
