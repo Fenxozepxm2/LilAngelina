@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import inspect
-from data.models.models_db import Poster, Disko, Order, OrderItem, User
+from data.models.models_db import Poster, Disko, Order, OrderItem, User, OrderAssignment
 from datetime import datetime
 
 
@@ -9,7 +9,7 @@ from datetime import datetime
 
 class LilangelinaRepo():
     def get_posters(self, db: Session):
-        return db.query(Poster).all()
+        return db.query(Poster).filter_by(status="approved").all()
 
 
     
@@ -19,6 +19,9 @@ class LilangelinaRepo():
 
     def get_disk(self, db: Session, id: int):
         return db.query(Disko).filter_by(id=id).first()
+    
+    def get_worker_posters(self, db: Session, id: int):
+        return db.query(Poster).filter(Poster.created_by_id == id).all()
 
     def get_poster(self, db: Session, id: int):
         return db.query(Poster).filter_by(id=id).first()
@@ -98,6 +101,36 @@ class LilangelinaRepo():
         }
         
 
+    def add_poster(self, db: Session, data, created_by_id,):
+        poster = Poster(
+            name = data.name,
+            author = data.author,
+            price = data.price,
+            size = data.size,
+            edition = data.edition,
+            poster_url = data.poster_url,
+            created_by_id = created_by_id,
+            status = "pending"
+        )
+        db.add(poster)
+        db.commit()
+        return {
+            "message": "added succesed"
+        }
+
+    def get_worker_orders(self, db: Session, worker_id):
+        return db.query(OrderAssignment).filter(OrderAssignment.worker_id == worker_id).all()
 
     def get_order_info(self, db: Session, user_id, order_id):
         return db.query(Order).options(selectinload(Order.items)).filter_by(user_id=user_id, id=order_id).first()
+    
+
+    def patch_order(self, db: Session, status: str, order_id):
+        order = db.query(Order).filter(Order.id == order_id).first()
+        order.status = status
+        db.commit()
+        db.refresh(order)
+
+        return order
+        
+        

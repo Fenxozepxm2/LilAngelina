@@ -91,3 +91,13 @@ class UserContacts(BaseModel):
 
 
 
+class AddPoster(BaseModel):
+    id: int
+    name: str
+    author: str
+    price: int
+    size: str
+    poster_url: str
+    edition: str
+    
+

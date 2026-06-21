@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import JSON, ForeignKey
+from sqlalchemy import JSON, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from typing import Optional, List
 
@@ -20,8 +20,25 @@ class User(Base):
     phone: Mapped[str] = mapped_column(nullable=True)
     mail: Mapped[str] = mapped_column(nullable=True)
     adres: Mapped[str] = mapped_column(nullable=True)
+    role: Mapped[str] = mapped_column(String, default="client")
 
     orders: Mapped[List["Order"]] = relationship(back_populates="user")
+
+
+
+class personal(Base):
+    __tablename__ = "personals"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    phone: Mapped[str] = mapped_column(nullable=True)
+    mail: Mapped[str] = mapped_column(nullable=True)
+    
+    
+
+
+
 
 
 class Poster(Base):
@@ -34,9 +51,21 @@ class Poster(Base):
     size: Mapped[int] = mapped_column(nullable=True) # 1920px x 1080px
     edition: Mapped[str] = mapped_column() # из какого материала, в рамке/не в рамке
     poster_url: Mapped[str] = mapped_column()
+    created_by_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    status: Mapped[str] = mapped_column(String, default="pending")  # pending, approved, rejected
+    approved_by_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_at: Mapped[datetime] = mapped_column(nullable=True)
 
 
 
+class OrderAssignment(Base):
+    __tablename__ = "order_assignments"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey("orders.id"))
+    worker_id: Mapped[int] = mapped_column(ForeignKey("users.id"))  # печатник
+    status: Mapped[str] = mapped_column(String, default="new")  # new, in_progress, shipped, delivered
+    assigned_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class Disko(Base):

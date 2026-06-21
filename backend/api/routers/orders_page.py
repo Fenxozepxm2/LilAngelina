@@ -7,10 +7,11 @@ from domain.models import UserAuthSchema
 import httpx  
 from dependencies import get_session, get_db
 from data.services.profile_service import LilAngelinaService
+from data.repos.profile_repo import LilangelinaRepo
 from sqlalchemy.orm import Session
 from config import settings
 from passlib.context import CryptContext
-from data.models.models_db import User, Poster, Disko
+from data.models.models_db import User, Poster, Disko, OrderAssignment
 import jwt
 from api.user import get_current_user
 from domain.models import OrderRequest, CartItemSchema
@@ -21,7 +22,7 @@ from fastapi.encoders import jsonable_encoder
 orders_page_router = APIRouter(tags=['orders'])
 
 
-@orders_page_router.get('/orders')
+@orders_page_router.get('/api/orders')
 def orders_page(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     service = LilAngelinaService(db)
     orders = service.lil_repo.get_user_orders(db, user.id)
@@ -76,7 +77,7 @@ def orders_page(db: Session = Depends(get_db), user: User = Depends(get_current_
         })
     return result
 
-@orders_page_router.post("/add_order")
+@orders_page_router.post("/api/add_order")
 def add_order(order_req: OrderRequest, user: User = Depends(get_current_user),db: Session = Depends(get_db)):
     service = LilAngelinaService(db)
     user_data = {
@@ -90,9 +91,43 @@ def add_order(order_req: OrderRequest, user: User = Depends(get_current_user),db
     return order
 
 
-@orders_page_router.get("/order/{order_id}")
+@orders_page_router.get("/api/order/{order_id}")
 def get_order_info(order_id, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     service = LilAngelinaService(db)
     order = service.show_user_order_info(user.id, order_id)
     return jsonable_encoder(order,exclude="commision")
     
+
+
+@orders_page_router.get("/api/worker_{worker_id}/orders")
+def get_workers_orders(worker_id: str, user: User = Depends(get_current_user) ,db: Session = Depends(get_db)):
+    repo = LilangelinaRepo()
+    worker_id = int(worker_id)
+    if user.id == worker_id:
+
+        orders = repo.get_worker_orders(db, worker_id)
+        return orders
+    else:
+        return {
+            "message" : "Отказано в доступе"
+        }
+
+@orders_page_router.patch("/api/worker_{worker_id}/orders/{order_id}}")
+def patch_status_order(worker_id: str, order_id: str , data: dict, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    
+    worker_id = int(worker_id)
+    order_id = int(order_id)
+    repo = LilangelinaRepo()
+    if user.id == worker_id:
+    
+        try:
+            status = data.get("status")
+            if status:
+                repo.patch_order(db, status, order_id)
+        except ValueError as e:
+            raise e
+        
+    else: 
+        return {
+            "message": "Отказано в доступе"
+        }
